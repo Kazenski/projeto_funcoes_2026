@@ -6,6 +6,7 @@ Projeto educacional desenvolvido para o ensino de programação orientada a mód
 
 O código está estruturado de forma modular para demonstrar aos alunos como organizar um projeto do mundo real:
 
+```
 projeto_rpg/
 │
 ├── personagem/
@@ -17,7 +18,7 @@ projeto_rpg/
 ├── funcoes.py            # Regras matemáticas, d20 e narrativa
 ├── conexao.py            # Credenciais e conexão com o Supabase
 └── main.py               # Game Loop principal
-
+```
 
 # Como Executar e Testar
 Certifique-se de ter o Python 3.10+ instalado na sua máquina.

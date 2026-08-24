@@ -127,5 +127,30 @@ INSERT INTO equipamentos (nome, bonus_atk, bonus_def, bonus_eva) VALUES
 Você deverá ter visto a seguinte mensagem: "Success. No rows returned."
 
 
+# O Mistério da Pasta __pycache__
 
+Quando vocês rodam um arquivo simples em Python (tudo em um arquivo só), o Python lê o texto e executa. Mas quando começamos a criar sistemas profissionais e usamos o import para chamar funções de outros arquivos (como fizemos importando a ficha e os inimigos), o Python tenta ser mais inteligente e rápido.
+
+<img width="1659" height="824" alt="image" src="https://github.com/user-attachments/assets/031c860b-4f0a-4a26-bb40-293192008e51" />
+
+## O que é exatamente esse cache?
+O computador não entende o nosso texto em Python (código-fonte). Ele precisa traduzir isso para "Bytecode" (uma linguagem intermediária mais próxima da máquina).
+Para não ter que traduzir os módulos importados toda vez que você roda o jogo, o Python faz a tradução na primeira vez e salva uma cópia rápida dentro da pasta __pycache__.
+
+## Analogia para a lousa: Imagine que você tem que ler um livro em inglês para a turma, mas você demora para traduzir mentalmente. Na primeira vez, você traduz e anota tudo em um caderno à parte. Na aula seguinte, você não traduz de novo, você apenas lê o seu caderno. O __pycache__ é esse "caderno de anotações" do Python!
+
+## Isso é lixo? Posso apagar?
+
+Não é lixo, é uma otimização de performance! Ele serve para deixar o carregamento do seu jogo muito mais rápido nas próximas execuções.
+Porém, sim, você pode apagar a qualquer momento sem medo. Se você deletar essa pasta, o seu projeto não vai quebrar. O único "problema" é que, na próxima vez que você der Play no jogo, o Python vai gastar alguns milissegundos a mais para traduzir tudo de novo e recriará a pasta automaticamente.
+
+## Dissecando o nome do arquivo (ficha.cpython-313.pyc)
+Olhando a sua imagem, vemos arquivos com uma extensão esquisita. Explique aos alunos o que cada parte significa:
+
+```
+ficha: É o nome original do seu módulo.
+cpython: É o nome do "motor" padrão do Python (escrito em linguagem C) que está rodando no seu computador.
+313: Representa a versão do Python instalada na sua máquina (Python 3.13).
+.pyc: Significa Python Compiled (Python Compilado / Bytecode).
+```
 

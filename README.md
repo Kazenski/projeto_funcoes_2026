@@ -11,11 +11,11 @@ O código está estruturado de forma modular para demonstrar aos alunos como org
 projeto_rpg/
 │
 ├── personagem/
-│   ├── ficha.py          # Coleta dados e gerencia o inventário/equipamentos do herói
+│   ├── ficha.py          # Coleta dados e gerencia inventário/equipamentos do herói
 │   └── logJogo.py        # Logs e exportação em TXT
 │
 ├── mestre/
-│   └── supabase_mestre.py# Funções para buscar monstros e itens direto do Supabase
+│   └── supabase_mestre.py# Busca monstros e itens direto do Supabase
 │
 ├── funcoes.py            # Regras matemáticas, d20 e narrativa
 ├── conexao.py            # Credenciais e conexão com o Supabase

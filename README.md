@@ -11,7 +11,7 @@ O código está estruturado de forma modular para demonstrar aos alunos como org
 projeto_rpg/
 │
 ├── personagem/
-│   ├── ficha.py          # Coleta dados e gerencia inventário/equipamentos do herói
+│   ├── ficha.py          # Coleta dados e gerencia inventário/equipamentos do herói\n
 │   └── logJogo.py        # Logs e exportação em TXT
 │
 ├── mestre/

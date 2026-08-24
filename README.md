@@ -1,10 +1,10 @@
-# 🛡️ Simulador de Combate Modular em Python
+# Simulador de Combate Modular em Python
 
 Projeto educacional desenvolvido para o ensino de programação orientada a módulos, separação de responsabilidades, importação de arquivos e lógica de jogos em Python. Ideal para aulas de cursos técnicos de desenvolvimento de sistemas.
 
 ---
 
-## 📂 Arquitetura do Projeto
+## Arquitetura do Projeto
 
 O código está estruturado de forma modular para demonstrar aos alunos como organizar um projeto do mundo real:
 
@@ -21,7 +21,6 @@ projeto_rpg/
 ├── conexao.py            # Credenciais e conexão com o Supabase
 └── main.py               # Game Loop principal
 
-'''
 
 # Como Executar e Testar
 Certifique-se de ter o Python 3.10+ instalado na sua máquina.

@@ -29,8 +29,10 @@ Abra o terminal (ou VS Code) na pasta raiz do projeto.
 
 Execute o arquivo principal digitando:
 
+```
 Bash
 python main.py
+```
 
 # Siga as instruções no terminal:
 
@@ -53,8 +55,12 @@ Para conectar o projeto ao Supabase, utilizamos a biblioteca oficial do Python c
 No terminal do VS Code, instalar a biblioteca oficial:
 
 Bash
+
+```
 pip install supabase
 python.exe -m pip install --upgrade pip
+```
+
 No painel do Supabase: Criar um projeto, ir nas configurações (Project Settings > API) e copiar a URL do projeto e a chave secreta anon public (ou service_role).
 
 Para evitar expor chaves de segurança no GitHub, ensinamos os alunos a usarem variáveis de ambiente ou a criarem um arquivo de configuração isolado (conexao.py).

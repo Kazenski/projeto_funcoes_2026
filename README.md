@@ -21,7 +21,7 @@ projeto_rpg/
 ├── conexao.py            # Credenciais e conexão com o Supabase
 └── main.py               # Game Loop principal
 
-
+'''
 
 # Como Executar e Testar
 Certifique-se de ter o Python 3.10+ instalado na sua máquina.

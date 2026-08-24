@@ -82,5 +82,50 @@ Agora procure pela credencial conforme as imagens:
 
 <img width="1279" height="550" alt="image" src="https://github.com/user-attachments/assets/68fbd561-63f4-4c90-bcf6-fb0c2ce4ebc9" />
 
+Agora crie a estrutura da sua base de dados:
+
+<img width="1730" height="831" alt="image" src="https://github.com/user-attachments/assets/585e2e4a-eddc-405c-abf9-1225219ac14f" />
+
+<img width="1872" height="914" alt="image" src="https://github.com/user-attachments/assets/f84ee9ee-e2e7-43bd-b840-9b52b25fcbd4" />
+
+Cole o seguinte código para criar a estrutura das entidades, atributos, seus tipos e esquemas necessários:
+
+```
+-- 1. Tabela de Inimigos cadastrados pelo Mestre
+CREATE TABLE inimigos (
+    id SERIAL PRIMARY KEY,
+    nome TEXT NOT NULL,
+    atk INT NOT NULL,
+    def INT NOT NULL,
+    hp INT NOT NULL
+);
+
+-- 2. Tabela de Equipamentos disponíveis (Itens que modificam atributos)
+CREATE TABLE equipamentos (
+    id SERIAL PRIMARY KEY,
+    nome TEXT NOT NULL,
+    bonus_atk INT DEFAULT 0,
+    bonus_def INT DEFAULT 0,
+    bonus_eva INT DEFAULT 0
+);
+
+-- 3. Inserindo dados iniciais de exemplo para testes
+INSERT INTO inimigos (nome, atk, def, hp) VALUES 
+('Goblin Ladrão', 12, 4, 30),
+('Orc Guerreiro', 18, 8, 60),
+('Dragão de Fogo', 35, 15, 150);
+
+INSERT INTO equipamentos (nome, bonus_atk, bonus_def, bonus_eva) VALUES 
+('Espada de Ferro', 5, 0, 0),
+('Escudo de Madeira', 0, 8, -2),
+('Capacete Ágil', 0, 2, 5);
+```
+<img width="1843" height="917" alt="image" src="https://github.com/user-attachments/assets/6024d8d2-646c-4145-85f3-e5606bf96207" />
+
+<img width="693" height="894" alt="image" src="https://github.com/user-attachments/assets/913622dd-9efe-4411-86ee-295f22895f54" />
+
+Você deverá ter visto a seguinte mensagem: "Success. No rows returned."
+
+
 
 

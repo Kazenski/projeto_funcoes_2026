@@ -1,102 +1,115 @@
 # =============================================================================
 # ARQUIVO: main.py
-# OBJETIVO: Orquestrar o jogo, o loop de turnos e a exportação final de arquivos.
+# OBJETIVO: Integrar banco de dados Supabase, equipamentos e o loop de combate.
 # =============================================================================
 
-from personagem.ficha import criar_ficha, exportar_ficha_txt
+from personagem.ficha import criar_ficha, equipar_item, calcular_atributos_totais
 from personagem.logJogo import registrar_acao, exibir_historico, exportar_historico_txt
-from mestre.inimigos import obter_lista_inimigos
+from mestre.supabase_mestre import obter_inimigos_do_banco, obter_equipamentos_do_banco, cadastrar_novo_inimigo
 from funcoes import calcular_ataque, gerar_narrativa_ataque
 
 
 def iniciar_jogo():
     print("-" * 50)
-    print(f"{'SIMULADOR DE COMBATE RPG - MODULAR':^50}")
+    print(f"{'SUPABASE RPG - COMBATE MODULAR COM CLOUD DB':^50}")
     print("-" * 50)
 
-    # 1. Criação do personagem
+    # 1. Criar Herói
     heroi = criar_ficha()
-    registrar_acao(
-        f"Herói {heroi['nome']} entrou na masmorra com ATK:{heroi['ATK']} DEF:{heroi['DEF']}")
 
-    # 2. Escolha do Inimigo
+    # 2. Buscar Equipamentos no Supabase e permitir escolher um
+    print("\n📦 Conectando ao Supabase para buscar equipamentos disponíveis...")
+    itens_loja = obter_equipamentos_do_banco()
+
+    if itens_loja:
+        print("\nEscolha um equipamento inicial:")
+        for i, item in enumerate(itens_loja):
+            print(
+                f"[{i}] {item['nome']} (ATK: +{item['bonus_atk']}, DEF: +{item['bonus_def']}, EVA: +{item['bonus_eva']})")
+
+        op_item = int(input("Digite o número do item desejado: "))
+        if 0 <= op_item < len(itens_loja):
+            equipar_item(heroi, itens_loja[op_item])
+
+    # 3. Buscar Inimigos no Supabase
+    print("\n👾 Buscando lista de chefes no Supabase...")
+    inimigos = obter_inimigos_do_banco()
+
+    if not inimigos:
+        print("Nenhum inimigo encontrado no banco. Cadastrando um padrão de emergência...")
+        inimigos = [{"nome": "Goblin de Emergência",
+                     "atk": 10, "def": 2, "hp": 25}]
+
     print("\nEscolha seu oponente:")
-    inimigos = obter_lista_inimigos()
     for i, inimigo in enumerate(inimigos):
         print(
-            f"[{i}] {inimigo['nome']} (HP: {inimigo['HP']} | ATK: {inimigo['ATK']} | DEF: {inimigo['DEF']})")
+            f"[{i}] {inimigo['nome']} (HP: {inimigo['hp']} | ATK: {inimigo['atk']} | DEF: {inimigo['def']})")
 
-    escolha = int(input("Digite o número do inimigo que deseja enfrentar: "))
-    alvo = inimigos[escolha].copy()
+    escolha = int(input("Digite o número do inimigo para lutar: "))
+    alvo = inimigos[escolha].copy()  # Cópia para manipular o HP localmente
 
-    registrar_acao(f"Combate iniciado contra o chefe: {alvo['nome']}")
+    registrar_acao(f"Combate iniciado: {heroi['nome']} vs {alvo['nome']}")
 
-    # 3. Loop de Combate
-    while heroi["HP_ATUAL"] > 0 and alvo["HP"] > 0:
+    # 4. Loop de Combate utilizando atributos com equipamentos
+    while heroi["HP_ATUAL"] > 0 and alvo["hp"] > 0:
+        atk_real, def_real, eva_real = calcular_atributos_totais(heroi)
+
         print("\n" + "-" * 40)
         print(
-            f"STATUS -> {heroi['nome']} (HP: {heroi['HP_ATUAL']}) X {alvo['nome']} (HP: {alvo['HP']})")
+            f"STATUS -> {heroi['nome']} (HP: {heroi['HP_ATUAL']}) X {alvo['nome']} (HP: {alvo['hp']})")
+        print(
+            f"Efetivos -> ATK: {atk_real} | DEF: {def_real} | EVA: {eva_real}")
         print("-" * 40)
 
         acao = input(
-            "Deseja [1] Atacar, [2] Ver Log na Tela ou [3] Sair/Fugir? ").strip()
+            "Deseja [1] Atacar, [2] Ver Log ou [3] Cadastrar Novo Monstro no DB? ").strip()
 
         if acao == "1":
-            print(f"\nTurno de {heroi['nome']}:")
-            dano_heroi, d20_heroi = calcular_ataque(heroi["ATK"], alvo["DEF"])
-            alvo["HP"] -= dano_heroi
-            alvo["HP"] = max(alvo["HP"], 0)  # Impede HP negativo na exibição
+            # Turno do Herói
+            dano_heroi, d20_heroi = calcular_ataque(atk_real, alvo["def"])
+            alvo["hp"] -= dano_heroi
+            alvo["hp"] = max(alvo["hp"], 0)
 
-            # Usando a nova função modular de narrativa
-            texto_ataque_heroi = gerar_narrativa_ataque(
+            texto1 = gerar_narrativa_ataque(
                 heroi['nome'], alvo['nome'], dano_heroi, d20_heroi)
-            print(texto_ataque_heroi)
-            registrar_acao(texto_ataque_heroi)
+            print(texto1)
+            registrar_acao(texto1)
 
-            # Checa se o inimigo morreu
-            if alvo["HP"] == 0:
-                print(
-                    f"\n🏆 GLÓRIA! {alvo['nome']} foi completamente derrotado!")
-                registrar_acao(
-                    f"Vitória! {heroi['nome']} derrotou {alvo['nome']}.")
+            if alvo["hp"] == 0:
+                print(f"\n🏆 Vitória! {alvo['nome']} foi destruído!")
+                registrar_acao(f"Herói venceu {alvo['nome']}.")
                 break
 
-            # Turno do Inimigo (Retruca)
-            print(f"\nTurno de {alvo['nome']}:")
-            dano_inimigo, d20_inimigo = calcular_ataque(
-                alvo["ATK"], heroi["DEF"])
+            # Turno do Inimigo
+            dano_inimigo, d20_inimigo = calcular_ataque(alvo["atk"], def_real)
             heroi["HP_ATUAL"] -= dano_inimigo
             heroi["HP_ATUAL"] = max(heroi["HP_ATUAL"], 0)
 
-            texto_ataque_inimigo = gerar_narrativa_ataque(
+            texto2 = gerar_narrativa_ataque(
                 alvo['nome'], heroi['nome'], dano_inimigo, d20_inimigo)
-            print(texto_ataque_inimigo)
-            registrar_acao(texto_ataque_inimigo)
+            print(texto2)
+            registrar_acao(texto2)
 
             if heroi["HP_ATUAL"] == 0:
-                print(
-                    f"\n💀 DERROTA... {heroi['nome']} caiu em batalha perante {alvo['nome']}.")
-                registrar_acao(
-                    f"Derrota. {heroi['nome']} foi abatido por {alvo['nome']}.")
+                print(f"\n💀 DERROTA... Você foi abatido.")
+                registrar_acao(f"Herói derrotado por {alvo['nome']}.")
                 break
 
         elif acao == "2":
             exibir_historico()
         elif acao == "3":
-            print("Você fugiu da batalha tchê! Fim de jogo antecipado.")
-            registrar_acao(
-                f"{heroi['nome']} fugiu do combate contra {alvo['nome']}.")
-            break
+            print("\n--- PAINEL DO MESTRE: CADASTRAR NO SUPABASE ---")
+            m_nome = input("Nome do monstro: ")
+            m_atk = int(input("ATK: "))
+            m_def = int(input("DEF: "))
+            m_hp = int(input("HP: "))
+            cadastrar_novo_inimigo(m_nome, m_atk, m_def, m_hp)
+            print(
+                "Monstro salvo na nuvem com sucesso! Reinicie o combate para encontrá-lo.")
         else:
             print("Opção inválida!")
 
-    # 4. Finalização e Exportação de Arquivos em TXT
-    print("\n" + "=" * 50)
-    print("GERANDO ARQUIVOS DE REGISTRO DO JOGO...")
-    print("=" * 50)
-    exportar_ficha_txt(heroi)
     exportar_historico_txt()
-    print("Processo finalizado com sucesso! Confira os arquivos .txt gerados na pasta.")
 
 
 if __name__ == "__main__":

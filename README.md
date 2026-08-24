@@ -8,18 +8,18 @@ Projeto educacional desenvolvido para o ensino de programação orientada a mód
 
 O código está estruturado de forma modular para demonstrar aos alunos como organizar um projeto do mundo real:
 
-```text
 projeto_rpg/
 │
 ├── personagem/
-│   ├── ficha.py        # Coleta dados do usuário, calcula HP e MP baseados em ATK, DEF e EVA.
-│   └── logJogo.py      # Gerencia o histórico e o diário de bordo das ações do jogo.
+│   ├── ficha.py          # Coleta dados e gerencia o inventário/equipamentos do herói
+│   └── logJogo.py        # Logs e exportação em TXT
 │
 ├── mestre/
-│   └── inimigos.py     # Contém a lista de monstros e o cadastro de oponentes.
+│   └── supabase_mestre.py# Funções para buscar monstros e itens direto do Supabase
 │
-├── funcoes.py          # Centraliza as regras matemáticas, rolagem de d20 e cálculo de dano.
-└── main.py             # Arquivo principal que importa os módulos e executa o Game Loop.
+├── funcoes.py            # Regras matemáticas, d20 e narrativa
+├── conexao.py            # Credenciais e conexão com o Supabase
+└── main.py               # Game Loop principal
 
 
 
@@ -47,3 +47,17 @@ Modularização: Como isolar lógicas em arquivos separados utilizando pastas e 
 Estruturas de Dados: Uso intensivo de Dicionários (dict) para modelar personagens e inimigos, e Listas (list) para registros e logs.
 Game Loop e Condicionais: Utilização de laços while e estruturas if-elif-else para controlar o fluxo de vida e turnos.
 Randomização: Uso da biblioteca nativa random para simular a imprevisibilidade de um RPG de mesa tradicional.
+
+
+# Como Conectar o Python ao Supabase
+Para conectar o projeto ao Supabase, utilizamos a biblioteca oficial do Python chamada supabase.
+
+# Passo a passo para os alunos:
+No terminal do VS Code, instalar a biblioteca oficial:
+
+Bash
+pip install supabase
+python.exe -m pip install --upgrade pip
+No painel do Supabase: Criar um projeto, ir nas configurações (Project Settings > API) e copiar a URL do projeto e a chave secreta anon public (ou service_role).
+
+Para evitar expor chaves de segurança no GitHub, ensinamos os alunos a usarem variáveis de ambiente ou a criarem um arquivo de configuração isolado (conexao.py).

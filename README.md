@@ -11,7 +11,7 @@ projeto_rpg/
 │
 ├── personagem/
 │   ├── ficha.py          # Coleta dados e gerencia inventário/equipamentos do herói
-│   └── logJogo.py        # Logs e exportação em TX│
+│   └── logJogo.py        # Logs e exportação em TXT
 ├── mestre/
 │   └── supabase_mestre.py# Busca monstros e itens direto do Supabase
 │

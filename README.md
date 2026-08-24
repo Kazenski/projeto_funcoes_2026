@@ -2,8 +2,6 @@
 
 Projeto educacional desenvolvido para o ensino de programação orientada a módulos, separação de responsabilidades, importação de arquivos e lógica de jogos em Python. Ideal para aulas de cursos técnicos de desenvolvimento de sistemas.
 
----
-
 ## Arquitetura do Projeto
 
 O código está estruturado de forma modular para demonstrar aos alunos como organizar um projeto do mundo real:
